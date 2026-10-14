@@ -10,9 +10,9 @@ jobs:
   validate:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
           node-version: "22"
 
@@ -33,7 +33,10 @@ jobs:
       - name: Validate Claude marketplace and plugin manifests
         run: |
           npm install -g @anthropic-ai/claude-code
-          claude plugin validate . --strict
+          # Not --strict at the root: the contributor-only CLAUDE.md always triggers the
+          # expected "not loaded as plugin context" warning (Agora documents the same).
+          # Errors still fail the step.
+          claude plugin validate .
           claude plugin validate ./.claude-plugin/plugin.json
 
       - name: Markdown lint
@@ -47,9 +50,9 @@ jobs:
       run:
         working-directory: skills/massive/assets/starter-nextjs
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
           node-version: "22"
 
