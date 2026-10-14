@@ -1,0 +1,24 @@
+{
+  "name": "massive-skills",
+  "description": "Skills for building real-time and historical market-data apps and dashboards with Massive.com",
+  "owner": {
+    "name": "Devin066",
+    "url": "https://github.com/Devin066"
+  },
+  "plugins": [
+    {
+      "name": "massive",
+      "displayName": "Massive Dashboards",
+      "source": "./",
+      "description": "Massive.com market data for stocks, options, futures, indices, forex, crypto, economy, and partner datasets, with a dashboard starter",
+      "category": "developer-tools",
+      "tags": [
+        "market-data",
+        "stocks",
+        "dashboard",
+        "real-time",
+        "websocket"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "name": "massive-skills-cursor",
+  "owner": {
+    "name": "Devin066",
+    "url": "https://github.com/Devin066"
+  },
+  "metadata": {
+    "description": "Cursor plugin packaging for Massive.com market-data skills"
+  },
+  "plugins": [
+    {
+      "name": "massive",
+      "source": "massive",
+      "description": "Massive.com market data for stocks, options, futures, indices, forex, crypto, economy, and partner datasets, with a dashboard starter."
+    }
+  ]
+}

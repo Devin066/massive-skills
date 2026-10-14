@@ -1,0 +1,63 @@
+name: Validate Skills
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Run skill validation
+        run: bash scripts/validate-skills.sh
+
+      - name: Skills CLI can discover and install the skill
+        env:
+          DO_NOT_TRACK: "1"
+          DISABLE_TELEMETRY: "1"
+        run: |
+          npx -y skills add "$PWD" -l | grep -q massive
+          mkdir -p "$RUNNER_TEMP/consumer" && cd "$RUNNER_TEMP/consumer"
+          npx -y skills add "$GITHUB_WORKSPACE" -a claude-code --copy -y
+          test -f .claude/skills/massive/SKILL.md
+          test -f .claude/skills/massive/assets/starter-nextjs/package.json
+
+      - name: Validate Claude marketplace and plugin manifests
+        run: |
+          npm install -g @anthropic-ai/claude-code
+          claude plugin validate . --strict
+          claude plugin validate ./.claude-plugin/plugin.json
+
+      - name: Markdown lint
+        uses: DavidAnson/markdownlint-cli2-action@v18
+        with:
+          globs: "skills/**/*.md tests/**/*.md *.md massive/*.md"
+
+  starter:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: skills/massive/assets/starter-nextjs
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Install
+        run: npm install --no-audit --no-fund
+
+      - name: Typecheck
+        run: npx tsc --noEmit
+
+      - name: Build
+        run: npx next build

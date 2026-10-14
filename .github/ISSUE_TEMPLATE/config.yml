@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Massive Documentation
+    url: https://massive.com/docs
+    about: Official Massive.com API documentation
+  - name: Massive Support
+    url: https://massive.com/contact
+    about: Account, plan, and data issues (not skill content)

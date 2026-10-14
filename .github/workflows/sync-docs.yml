@@ -1,0 +1,36 @@
+name: Sync Massive Docs
+
+# Weekly re-scrape of massive.com/docs/llms.txt. Opens a PR when endpoint paths or
+# plan gates in references/endpoint-index.md change.
+on:
+  schedule:
+    - cron: "0 9 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Regenerate endpoint index
+        run: node scripts/sync-docs.mjs
+
+      - name: Validate
+        run: bash scripts/validate-skills.sh
+
+      - name: Open PR if changed
+        uses: peter-evans/create-pull-request@v6
+        with:
+          branch: chore/sync-docs
+          title: "chore: sync endpoint index from Massive docs"
+          commit-message: "chore: sync endpoint index from Massive docs"
+          body: "Automated re-scrape of https://massive.com/docs/llms.txt. Review plan-gate changes before merging. Hand-written references may need matching edits."

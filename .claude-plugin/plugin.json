@@ -1,0 +1,25 @@
+{
+  "name": "massive",
+  "displayName": "Massive Dashboards",
+  "description": "Real-time and historical market data with Massive.com: stocks, options, futures, indices, forex, crypto, economy, and partner data via REST, WebSocket, and Flat Files, plus a Next.js dashboard starter.",
+  "version": "0.1.0",
+  "author": {
+    "name": "Devin066",
+    "url": "https://github.com/Devin066"
+  },
+  "license": "MIT",
+  "keywords": [
+    "massive",
+    "polygon",
+    "stock-market",
+    "market-data",
+    "dashboard",
+    "real-time",
+    "websocket",
+    "candlestick",
+    "nextjs",
+    "trading"
+  ],
+  "homepage": "https://github.com/Devin066/massive-skills",
+  "repository": "https://github.com/Devin066/massive-skills"
+}

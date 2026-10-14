@@ -1,0 +1,68 @@
+name: Release
+
+# Push a tag like v0.2.0 (see scripts/bump-version.mjs). The workflow verifies the tag
+# matches every version authority, validates the skill, checks that the skills CLI can
+# discover and install it, builds the starter, then publishes a GitHub Release with the
+# CHANGELOG section and a zipped skill bundle.
+on:
+  push:
+    tags: ["v*.*.*"]
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Tag matches versions
+        run: |
+          tag="${GITHUB_REF_NAME#v}"
+          skill=$(grep -E "^\s+version:" skills/massive/SKILL.md | head -1 | sed -E "s/.*version:\s*['\"]?([^'\"]+)['\"]?/\1/")
+          test "$tag" = "$skill" || { echo "::error::tag v$tag != SKILL.md version $skill"; exit 1; }
+
+      - name: Validate
+        run: bash scripts/validate-skills.sh
+
+      - name: Skills CLI can discover and install the skill
+        env:
+          DO_NOT_TRACK: "1"
+          DISABLE_TELEMETRY: "1"
+        run: |
+          npx -y skills add "$PWD" -l | tee list.txt
+          grep -q "massive" list.txt
+          mkdir -p "$RUNNER_TEMP/consumer" && cd "$RUNNER_TEMP/consumer"
+          npx -y skills add "$GITHUB_WORKSPACE" -a claude-code --copy -y
+          test -f .claude/skills/massive/SKILL.md
+          test -f .claude/skills/massive/assets/starter-nextjs/package.json
+
+      - name: Starter builds
+        working-directory: skills/massive/assets/starter-nextjs
+        run: |
+          npm install --no-audit --no-fund
+          npx tsc --noEmit
+          npx next build
+
+      - name: Release notes from CHANGELOG
+        run: |
+          v="${GITHUB_REF_NAME#v}"
+          awk -v h="## [$v]" 'index($0, h) == 1 {f=1; next} /^## \[/ {f=0} f' CHANGELOG.md > notes.md
+          test -s notes.md || { echo "::error::CHANGELOG.md has no notes under [$v]"; exit 1; }
+          printf '\n## Install\n\n```bash\nnpx skills add %s\n```\n' "$GITHUB_REPOSITORY" >> notes.md
+          cat notes.md
+
+      - name: Bundle
+        run: |
+          rm -rf skills/massive/assets/starter-nextjs/node_modules skills/massive/assets/starter-nextjs/.next
+          (cd skills && zip -r "../massive-skill-${GITHUB_REF_NAME}.zip" massive)
+
+      - name: Publish GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release create "$GITHUB_REF_NAME" "massive-skill-${GITHUB_REF_NAME}.zip" --title "$GITHUB_REF_NAME" --notes-file notes.md
