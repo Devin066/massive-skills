@@ -6,19 +6,28 @@ for a real ticker, or confirming a field name. It is **never** part of the dashb
 
 **Only set it up when the user asks.** This skill works without it (REST + [doc-fetching.md](doc-fetching.md)).
 
-## Hosted (recommended)
+## Hosted (Recommended)
 
-- URL: `https://mcp.massive.com/`. Auth: OAuth in the browser (no key to paste). Access mirrors the user's plan.
-- Claude Code:
+URL `https://mcp.massive.com/`. Auth is OAuth in the browser (no key to paste), and access mirrors
+the user's plan. Limits: about 64 MB of working storage per session, up to 10 concurrent workspaces.
+Set it up for the agent the user is actually running. The config keys differ per client:
 
-  ```bash
-  claude mcp add --transport http massive https://mcp.massive.com/
-  ```
+| Client | Setup | Then |
+| --- | --- | --- |
+| Claude Code | `claude mcp add --transport http massive https://mcp.massive.com/` | `/mcp` → `massive` → Authenticate |
+| Cursor | `~/.cursor/mcp.json`: `{ "mcpServers": { "massive": { "url": "https://mcp.massive.com/" } } }` | Restart Cursor, click Connect |
+| OpenAI Codex | `~/.codex/config.toml`: `[mcp_servers.massive]` + `url = "https://mcp.massive.com/"` | `codex mcp login massive` |
+| Gemini CLI | `~/.gemini/settings.json`: `{ "mcpServers": { "massive": { "httpUrl": "https://mcp.massive.com/" } } }` (note `httpUrl`) | Sign in when prompted |
+| GitHub Copilot (VS Code) | `.vscode/mcp.json`: `{ "servers": { "massive": { "type": "http", "url": "https://mcp.massive.com/" } } }` (note `servers`) | Start it from the MCP view, then Allow. Needs Agent mode |
+| Claude Desktop | Customize → Connectors → Add custom connector → URL above | Connect |
+| ChatGPT | Settings → Apps & Connectors → enable Developer mode → Create → URL above | Paid plan required |
+| Grok | grok.com → connectors → New Connector → Custom → URL above | See the Grok guide for OAuth fields |
 
-  Then run `/mcp`, select `massive`, and authenticate.
-- Cursor: add `"massive": { "url": "https://mcp.massive.com/" }` under `mcpServers` in `mcp.json`.
-- Other clients (Claude Desktop, ChatGPT, Codex, Copilot, Gemini CLI): <https://massive.com/docs/ai-tools/quickstart.md>.
-- Limits: about 64 MB of working storage per session, up to 10 concurrent workspaces.
+Per-client guides with troubleshooting: <https://massive.com/docs/ai-tools/quickstart.md>.
+Other agents: add an HTTP (streamable) MCP server with the URL above, using that agent's MCP config.
+
+If the agent answers with numbers but never shows an MCP call, it is using training data. Ask it
+to "use the Massive MCP server" explicitly.
 
 ## Self-Hosted
 

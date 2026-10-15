@@ -30,17 +30,8 @@ jobs:
       - name: Validate
         run: bash scripts/validate-skills.sh
 
-      - name: Skills CLI can discover and install the skill
-        env:
-          DO_NOT_TRACK: "1"
-          DISABLE_TELEMETRY: "1"
-        run: |
-          npx -y skills add "$PWD" -l | tee list.txt
-          grep -q "massive" list.txt
-          mkdir -p "$RUNNER_TEMP/consumer" && cd "$RUNNER_TEMP/consumer"
-          npx -y skills add "$GITHUB_WORKSPACE" -a claude-code --copy -y
-          test -f .claude/skills/massive/SKILL.md
-          test -f .claude/skills/massive/assets/starter-nextjs/package.json
+      - name: Install into every documented coding agent
+        run: bash scripts/test-agent-installs.sh
 
       - name: Starter builds
         working-directory: skills/massive/assets/starter-nextjs

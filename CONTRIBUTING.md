@@ -62,10 +62,20 @@ Version rules:
 Add entries under `## [Unreleased]` as you work. The bump script moves them under the new
 version. Pushing the `v<x.y.z>` tag publishes the release.
 
+## Supporting More Coding Agents
+
+The skill is agent-neutral: plain Markdown in the open [Agent Skills](https://agentskills.io) format, installed by the [skills CLI](https://github.com/vercel-labs/skills). To document an additional agent:
+
+1. Find its install path: `npx skills add . -a <agent-id> --copy -y` in an empty folder, then locate `SKILL.md`.
+2. Add a row to the "IDE & Tool Setup" table in `README.md` and the same `id|path` line to `scripts/test-agent-installs.sh`.
+3. If the agent has its own MCP config format, add a row to `skills/massive/references/mcp-tools.md` (copy it from Massive's client guide).
+4. Keep skill content agent-neutral: no agent-specific commands outside `mcp-tools.md` and the README.
+
 ## Validation
 
 ```bash
 bash scripts/validate-skills.sh
+bash scripts/test-agent-installs.sh
 ```
 
 Zero errors required before opening a PR.

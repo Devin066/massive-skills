@@ -2,7 +2,7 @@
 
 **The fastest way to build real-time and historical stock market apps and dashboards with your AI coding assistant.**
 
-A knowledge pack that teaches Claude Code, Cursor, Copilot, and other agents how to build on
+A knowledge pack that teaches Claude Code, Cursor, Codex, Copilot, Gemini CLI, and 75+ other coding agents how to build on
 [Massive.com](https://massive.com) (formerly Polygon.io) market data across every asset class
 (stocks, options, futures, indices, forex, crypto, economy, and partner datasets): the right
 endpoint for each job, which plan unlocks what, how to stream live prices without leaking your
@@ -53,15 +53,16 @@ The starter works on **every plan**. A free key gets an end-of-day dashboard, St
 ### Skills CLI (recommended)
 
 ```bash
-npx skills add Devin066/massive-skills                    # this project (.claude/skills/massive, etc.)
-npx skills add Devin066/massive-skills -g                 # user-level, all projects
-npx skills add Devin066/massive-skills -a claude-code     # pick the agent(s); '*' for all
-npx skills add Devin066/massive-skills -l                 # list what's in the repo without installing
+npx skills add Devin066/massive-skills                         # pick agents interactively
+npx skills add Devin066/massive-skills -a claude-code cursor   # specific agents
+npx skills add Devin066/massive-skills -a '*'                  # every supported agent
+npx skills add Devin066/massive-skills -g                      # user-level, all projects
+npx skills add Devin066/massive-skills -l                      # list skills without installing
 ```
 
-Works with Claude Code, Cursor, Codex, Copilot, Gemini CLI, Windsurf, and the other agents the
-[skills CLI](https://github.com/vercel-labs/skills) supports. It installs the whole bundle:
-`SKILL.md`, `references/`, and the `assets/starter-nextjs` dashboard.
+The [skills CLI](https://github.com/vercel-labs/skills) installs the whole bundle (`SKILL.md`,
+`references/`, `assets/starter-nextjs`) into each agent's skills folder. `SKILL.md` follows the
+open [Agent Skills](https://agentskills.io) format, so the same files work in every agent below.
 
 Update or remove:
 
@@ -70,23 +71,69 @@ npx skills update massive
 npx skills remove massive
 ```
 
+## IDE & Tool Setup
+
+Every agent the skills CLI supports can load this skill. Project-level install paths, verified
+with `npx skills add -a <agent>`:
+
+| Agent | `-a` value | Installs to |
+| --- | --- | --- |
+| Claude Code | `claude-code` | `.claude/skills/massive` |
+| Cursor | `cursor` | `.agents/skills/massive` |
+| OpenAI Codex | `codex` | `.agents/skills/massive` |
+| GitHub Copilot | `github-copilot` | `.agents/skills/massive` |
+| Gemini CLI | `gemini-cli` | `.agents/skills/massive` |
+| Google Antigravity | `antigravity` | `.agents/skills/massive` |
+| Windsurf | `windsurf` | `.windsurf/skills/massive` |
+| Cline | `cline` | `.agents/skills/massive` |
+| Roo Code | `roo` | `.roo/skills/massive` |
+| Kilo Code | `kilo` | `.agents/skills/massive` |
+| Kiro CLI | `kiro-cli` | `.kiro/skills/massive` |
+| OpenCode | `opencode` | `.agents/skills/massive` |
+| Amp | `amp` | `.agents/skills/massive` |
+| Goose | `goose` | `.goose/skills/massive` |
+| Junie (JetBrains) | `junie` | `.junie/skills/massive` |
+| Augment | `augment` | `.augment/skills/massive` |
+| Zed | `zed` | `.agents/skills/massive` |
+| Warp | `warp` | `.agents/skills/massive` |
+| Trae | `trae` | `.trae/skills/massive` |
+| Qwen Code | `qwen-code` | `.qwen/skills/massive` |
+| Continue | `continue` | `.continue/skills/massive` |
+| OpenHands | `openhands` | `.openhands/skills/massive` |
+| Devin | `devin` | `.devin/skills/massive` |
+| Replit | `replit` | `.agents/skills/massive` |
+| Crush | `crush` | `.crush/skills/massive` |
+| Grok | `grok` | `.grok/skills/massive` |
+| Tabnine CLI | `tabnine-cli` | `.tabnine/agent/skills/massive` |
+| OpenClaw | `openclaw` | `skills/massive` |
+| Hermes Agent | `hermes-agent` | `.hermes/skills/massive` |
+
+`.agents/skills/` is the shared folder many agents read. For any other supported agent, run
+`npx skills add Devin066/massive-skills -a '*'` or see the CLI's agent list.
+
 ### Manual Copy
 
 ```bash
 git clone https://github.com/Devin066/massive-skills.git
-cp -r massive-skills/skills/massive ~/.claude/skills/massive        # user-level
-cp -r massive-skills/skills/massive .claude/skills/massive          # or per project
+cp -r massive-skills/skills/massive .claude/skills/massive      # Claude Code (project)
+cp -r massive-skills/skills/massive ~/.claude/skills/massive    # Claude Code (user)
+cp -r massive-skills/skills/massive .agents/skills/massive      # Cursor, Codex, Copilot, Gemini CLI, and other .agents readers
 ```
 
-Any other tool: point it at `skills/massive/SKILL.md`. The files are plain Markdown.
+### Plugin Packaging
+
+- **Claude Code:** `.claude-plugin/` (marketplace + plugin manifest; bundles the Massive MCP server via `.mcp.json`)
+- **Cursor:** `.cursor-plugin/marketplace.json` + the `massive/` wrapper (`.cursor-plugin/plugin.json`, `mcp.json`)
+
+### Any Other Tool
+
+The skill files are plain Markdown. Use `skills/massive/SKILL.md` as the entry point.
 
 ### Optional: Massive MCP Server
 
-For interactive data lookups while coding (not used by the dashboard itself):
-
-```bash
-claude mcp add --transport http massive https://mcp.massive.com/
-```
+For interactive data lookups while coding (never used by the dashboard itself). Setup for Claude
+Code, Cursor, Codex, Gemini CLI, GitHub Copilot, Claude Desktop, ChatGPT, and Grok:
+[skills/massive/references/mcp-tools.md](skills/massive/references/mcp-tools.md).
 
 ## What's Covered
 
@@ -124,6 +171,7 @@ massive/                        Cursor plugin wrapper (plugin.json, mcp.json, lo
 scripts/
 ├── sync-docs.mjs               Re-scrape massive.com/docs → per-class api-*.md + endpoint-index.md
 ├── bump-version.mjs            Sync version across SKILL.md + manifests, cut CHANGELOG
+├── test-agent-installs.sh      Install via skills CLI into 29 coding agents, check each folder
 ├── validate-skills.sh          Entry point (runs validate-skills.mjs)
 └── validate-skills.mjs         Frontmatter, links, sizes, versions, starter safety rules
 skills/massive/

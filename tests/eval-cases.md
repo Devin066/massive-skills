@@ -91,6 +91,13 @@ For each case:
 - Pass Criteria: explains Benzinga datasets are separate add-ons (Benzinga Earnings) not included in Stocks plans; does not debug the code
 - Result: ___
 
+### R-12: MCP setup in a non-Claude agent
+
+- User Input (in Codex or Gemini CLI): "Connect the Massive MCP server so you can look up live data while we code"
+- Expected Behavior: Routes to `mcp-tools.md`
+- Pass Criteria: Codex → `[mcp_servers.massive]` with `url` in `~/.codex/config.toml` + `codex mcp login massive`; Gemini CLI → `httpUrl` in `~/.gemini/settings.json`; does not give the `claude mcp add` command; states the MCP is a session tool, not app code
+- Result: ___
+
 ## 2. Guardrails and Failure Paths (G-series)
 
 ### G-08: Stale tutorial code

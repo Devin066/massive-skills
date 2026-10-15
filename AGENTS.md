@@ -48,6 +48,7 @@ tests/eval-cases.md
 
 ```bash
 bash scripts/validate-skills.sh
+bash scripts/test-agent-installs.sh
 ```
 
 Covers: frontmatter, name/directory match, duplicate names, broken relative links, Layer-4

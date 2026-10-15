@@ -46,6 +46,9 @@ Run before suggesting any PR:
 
 ```bash
 bash scripts/validate-skills.sh
+bash scripts/test-agent-installs.sh   # skills CLI install into every documented agent
 ```
+
+CI also runs `skills-ref validate skills/massive` (the official Agent Skills spec, which keeps the skill portable across agents).
 
 Zero errors required. When docs change upstream, run `node scripts/sync-docs.mjs` and review the diff of `endpoint-index.md`.
