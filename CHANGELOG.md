@@ -10,6 +10,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 - **Multi-agent support:** README "IDE & Tool Setup" table with verified skills CLI install paths for 29 coding agents (Claude Code, Cursor, Codex, GitHub Copilot, Gemini CLI, Antigravity, Windsurf, Cline, Roo, Kilo, Kiro, OpenCode, Amp, Goose, Junie, Augment, Zed, Warp, Trae, Qwen Code, Continue, OpenHands, Devin, Replit, Crush, Grok, Tabnine, OpenClaw, Hermes). The skill installs into all 80 agents the CLI supports.
 - `scripts/test-agent-installs.sh`: installs into every documented agent and checks the bundle, run in CI and before releases.
+- README install requirements (Node.js 22.20+ for the current skills CLI; `npx skills@1.5.18` fallback for Node 18/20) and a troubleshooting table.
 - CI runs `skills-ref validate` (official Agent Skills spec), as Agora does.
 - `mcp-tools.md`: Massive MCP setup for Claude Code, Cursor, Codex, Gemini CLI, GitHub Copilot, Claude Desktop, ChatGPT, and Grok, with each client's exact config keys.
 - Eval case R-12 (Massive MCP setup in a non-Claude agent).

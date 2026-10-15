@@ -71,6 +71,20 @@ npx skills update massive
 npx skills remove massive
 ```
 
+**Requirements:** the current skills CLI needs **Node.js 22.20 or newer** (`node -v`). On Node 18
+or 20, either upgrade Node (recommended) or use the last CLI release that supports it:
+
+```bash
+npx skills@1.5.18 add Devin066/massive-skills
+```
+
+### Troubleshooting
+
+| Error | Cause | Fix |
+| --- | --- | --- |
+| `SyntaxError: The requested module 'fs/promises' does not provide an export named 'glob'` | Node.js older than 22 running the latest skills CLI | Upgrade to Node 22.20+ (e.g. `nvm install 22 && nvm use 22`), or run `npx skills@1.5.18 add …` |
+| `Repository not found` / authentication prompt | The repo is private and this machine's git has no access | Get collaborator access, then `gh auth login` (or set up a git credential), and retry |
+
 ## IDE & Tool Setup
 
 Every agent the skills CLI supports can load this skill. Project-level install paths, verified
